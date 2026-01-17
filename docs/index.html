@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CanvasBarrage Demo</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+      }
+      .page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding: 32px clamp(16px, 3vw, 48px);
+        box-sizing: border-box;
+      }
+      header {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      header h1 {
+        margin: 0;
+        font-size: clamp(24px, 4vw, 36px);
+      }
+      header p {
+        margin: 0;
+        color: #cbd5f5;
+        max-width: 680px;
+      }
+      .stage {
+        position: relative;
+        background: #0f172a;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        border-radius: 16px;
+        overflow: hidden;
+        min-height: 320px;
+      }
+      .stage__bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+        pointer-events: none;
+      }
+      .canvas {
+        width: 100%;
+        height: 320px;
+      }
+      .panel {
+        display: grid;
+        gap: 16px;
+      }
+      .panel__row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+      .panel button {
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: none;
+        background: #38bdf8;
+        color: #0f172a;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .panel button.secondary {
+        background: rgba(148, 163, 184, 0.2);
+        color: #e2e8f0;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+      }
+      .panel button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px rgba(56, 189, 248, 0.35);
+      }
+      .panel label {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 12px;
+        color: #94a3b8;
+      }
+      .panel input[type="text"],
+      .panel input[type="number"],
+      .panel input[type="range"],
+      .panel input[type="color"] {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        border-radius: 8px;
+        padding: 8px 10px;
+        color: #e2e8f0;
+      }
+      .panel input[type="range"] {
+        padding: 0;
+      }
+      .panel span {
+        color: #94a3b8;
+      }
+      .panel .pill {
+        background: rgba(148, 163, 184, 0.15);
+        border-radius: 999px;
+        padding: 4px 12px;
+        font-size: 12px;
+        color: #e2e8f0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <h1>CanvasBarrage GitHub Pages Demo</h1>
+        <p>
+          这里展示的是高性能 Canvas 弹幕库的效果，你可以调节参数、添加弹幕，
+          用于调试和验证不同配置下的表现。
+        </p>
+      </header>
+
+      <div class="stage" id="stage">
+        <img class="stage__bg" src="./kunkun.gif" alt="demo background" />
+        <div class="canvas"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__row">
+          <button id="add">添加弹幕</button>
+          <button id="add-random" class="secondary">批量随机弹幕</button>
+          <span>已渲染：<strong id="count">0</strong> 条</span>
+          <span class="pill" id="status">已启动</span>
+        </div>
+
+        <div class="panel__row">
+          <label>
+            单条弹幕内容
+            <input id="message" type="text" value="这是一条新弹幕" />
+          </label>
+          <label>
+            行数
+            <input id="rows" type="number" min="1" max="10" value="6" />
+          </label>
+          <label>
+            速度
+            <input id="speed" type="range" min="0.5" max="3" step="0.1" value="1.2" />
+          </label>
+          <label>
+            字体大小
+            <input id="font-size" type="range" min="14" max="32" step="1" value="22" />
+          </label>
+          <label>
+            随机颜色
+            <input id="random-color" type="checkbox" checked />
+          </label>
+          <label>
+            字体颜色
+            <input id="font-color" type="color" value="#ffffff" />
+          </label>
+          <button id="apply" class="secondary">应用设置</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import CanvasBarrage from "./index.js";
+
+      const baseMessages = [
+        "CanvasBarrage 带来流畅的弹幕体验",
+        "GitHub Pages Demo",
+        "支持随机颜色",
+        "超高性能渲染",
+        "轻松集成到任意框架",
+        "保持弹幕间距",
+        "点击按钮可追加弹幕"
+      ];
+
+      const makeList = (count, prefix = "新弹幕") =>
+        Array.from({ length: count }, (_, index) => ({
+          value: `${prefix} #${index + 1}`
+        }));
+
+      const seedList = [
+        ...baseMessages.map(value => ({ value })),
+        ...makeList(30, "欢迎来到 CanvasBarrage")
+      ];
+
+      const stage = document.getElementById("stage");
+      const countEl = document.getElementById("count");
+      const statusEl = document.getElementById("status");
+      const addBtn = document.getElementById("add");
+      const addRandomBtn = document.getElementById("add-random");
+      const applyBtn = document.getElementById("apply");
+      const messageInput = document.getElementById("message");
+      const rowsInput = document.getElementById("rows");
+      const speedInput = document.getElementById("speed");
+      const fontSizeInput = document.getElementById("font-size");
+      const randomColorInput = document.getElementById("random-color");
+      const fontColorInput = document.getElementById("font-color");
+
+      let totalCount = seedList.length;
+      let barrage;
+
+      const initBarrage = ({ list }) => {
+        stage.querySelectorAll("canvas").forEach(canvas => canvas.remove());
+
+        barrage = new CanvasBarrage({
+          id: ".canvas",
+          barrageList: list,
+          isRandomFontColor: randomColorInput.checked,
+          fontColor: fontColorInput.value,
+          barrageSpeed: Number(speedInput.value),
+          barrageRow: Number(rowsInput.value),
+          fontSize: Number(fontSizeInput.value),
+          renderOverLimit: 30
+        });
+
+        barrage.drawBarrage();
+        statusEl.textContent = "已启动";
+      };
+
+      initBarrage({ list: seedList });
+      countEl.textContent = totalCount;
+
+      addBtn.addEventListener("click", () => {
+        const value = messageInput.value.trim() || "新的弹幕";
+        barrage.addBarrage([{ value }]);
+        totalCount += 1;
+        countEl.textContent = totalCount;
+      });
+
+      addRandomBtn.addEventListener("click", () => {
+        const nextBatch = makeList(10, "批量弹幕");
+        barrage.addBarrage(nextBatch);
+        totalCount += nextBatch.length;
+        countEl.textContent = totalCount;
+      });
+
+      applyBtn.addEventListener("click", () => {
+        const currentList = barrage.barrageOriginList || seedList;
+        initBarrage({ list: currentList });
+      });
+    </script>
+  </body>
+</html>
