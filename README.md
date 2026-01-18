@@ -1,24 +1,24 @@
-# CanvasBarrage 高性能 Canvas 弹幕引擎
+# CanvasBarrage High-Performance Canvas Barrage Engine
 
-> 可处理海量弹幕数据，保持顺滑动画体验，支持高度自定义与多框架集成。
+> Handle massive barrage data smoothly with rich customization and multi-framework integration.
 
-## ✨ 特性
+## ✨ Highlights
 
-- **高性能渲染**：基于 `requestAnimationFrame` 持续绘制，平滑不卡顿。
-- **无限循环**：自动回收已退出的弹幕并补充新弹幕，实现持续播放。
-- **高度可配置**：速度、行数、间距、字体、颜色、随机色等参数随心调整。
-- **可扩展**：运行时支持 `addBarrage` 动态追加弹幕数据。
-- **多环境友好**：既支持模块引入，也可直接通过浏览器全局对象使用。
+- **High-performance rendering**: Continuous drawing with `requestAnimationFrame` for smooth animation.
+- **Infinite loop**: Automatically recycles off-screen barrages and replenishes new ones for nonstop playback.
+- **Highly configurable**: Tune speed, rows, spacing, font, color, random color, and more.
+- **Extensible**: Use `addBarrage` at runtime to append barrages dynamically.
+- **Multi-environment friendly**: Use as a module or via the browser global.
 
-## 📦 安装与引入
+## 📦 Install & Import
 
-### 1. 模块化使用（推荐）
+### 1. Modular usage (recommended)
 
 ```js
 import CanvasBarrage from './index.js'
 ```
 
-### 2. 浏览器直接使用
+### 2. Direct browser usage
 
 ```html
 <script src="./index.js"></script>
@@ -27,11 +27,11 @@ import CanvasBarrage from './index.js'
 </script>
 ```
 
-> 由于脚本会自动挂载到 `window.CanvasBarrage`，可以在任意框架中使用。
+> The script attaches to `window.CanvasBarrage` automatically, so it works in any framework.
 
-## 🧱 容器结构与样式建议
+## 🧱 Container structure & styling tips
 
-Canvas 会以绝对定位覆盖在目标容器上方，建议容器父级设置相对定位：
+The canvas is absolutely positioned on top of the target container. Set the parent to relative positioning:
 
 ```html
 <div class="barrage-wrapper">
@@ -53,15 +53,15 @@ Canvas 会以绝对定位覆盖在目标容器上方，建议容器父级设置�
 }
 ```
 
-## 🚀 快速开始
+## 🚀 Quick start
 
 ```js
 const options = {
   id: '.canvas',
   barrageList: [
     { value: 'Hello Canvas' },
-    { value: '弹幕滚动起来！' },
-    { value: '高性能渲染' }
+    { value: 'Let the barrages roll!' },
+    { value: 'High-performance rendering' }
   ],
   isRandomFontColor: true,
   barrageSpeed: 1,
@@ -70,65 +70,65 @@ const options = {
 
 const barrage = new CanvasBarrage(options)
 
-// 启动动画
+// Start animation
 barrage.drawBarrage()
 
-// 动态追加弹幕
+// Append barrages dynamically
 barrage.addBarrage([
-  { value: '新增弹幕 A' },
-  { value: '新增弹幕 B' }
+  { value: 'New barrage A' },
+  { value: 'New barrage B' }
 ])
 ```
 
-## ⚙️ 实例参数（Options）
+## ⚙️ Options
 
-| 参数 | 说明 | 类型 | 必选 | 默认值 |
+| Option | Description | Type | Required | Default |
 | --- | --- | --- | --- | --- |
-| `id` | 目标元素选择器（用于创建 Canvas 覆盖） | `string` | ✅ | 无 |
-| `barrageList` | 初始弹幕数组 | `IBarrageItem[]` | ✅ | `[]` |
-| `barrageRow` | 弹幕行数 | `number` | 否 | `5` |
-| `barrageSpace` | 弹幕之间的水平间距 | `number` | 否 | `50` |
-| `toVw` | 是否将位移单位换算为 `vw` | `boolean` | 否 | `false` |
-| `basePx` | `vw` 计算基准宽度 | `number` | 否 | `document.documentElement.clientWidth` |
-| `renderSize` | 单次渲染弹幕数量（用于性能控制） | `number` | 否 | `50` |
-| `fontSize` | 字体大小 | `number` | 否 | `20` |
-| `fontFamily` | 字体名称 | `string` | 否 | `Arial` |
-| `isRandomFontColor` | 是否随机颜色 | `boolean` | 否 | `false` |
-| `fontColor` | 默认字体颜色 | `string` | 否 | `black` |
-| `barrageSpeed` | 弹幕速度 | `number` | 否 | `1` |
-| `renderOverLimit` | 达到该退出数量时进行重新渲染 | `number` | 否 | `20` |
-| `maxLimit` | 允许的最大弹幕缓存数量 | `number` | 否 | `200` |
+| `id` | Target element selector (used to create the canvas overlay) | `string` | ✅ | None |
+| `barrageList` | Initial barrage array | `IBarrageItem[]` | ✅ | `[]` |
+| `barrageRow` | Number of rows | `number` | No | `5` |
+| `barrageSpace` | Horizontal spacing between barrages | `number` | No | `50` |
+| `toVw` | Convert movement units to `vw` | `boolean` | No | `false` |
+| `basePx` | Base width for `vw` calculation | `number` | No | `document.documentElement.clientWidth` |
+| `renderSize` | Barrages per render (performance control) | `number` | No | `50` |
+| `fontSize` | Font size | `number` | No | `20` |
+| `fontFamily` | Font family | `string` | No | `Arial` |
+| `isRandomFontColor` | Randomize colors | `boolean` | No | `false` |
+| `fontColor` | Default font color | `string` | No | `black` |
+| `barrageSpeed` | Barrage speed | `number` | No | `1` |
+| `renderOverLimit` | Re-render when exit count reaches this threshold | `number` | No | `20` |
+| `maxLimit` | Maximum cached barrage count | `number` | No | `200` |
 
-## 🧾 弹幕数据结构（`barrageList`）
+## 🧾 Barrage data structure (`barrageList`)
 
-| 字段 | 说明 | 类型 | 必选 |
+| Field | Description | Type | Required |
 | --- | --- | --- | --- |
-| `value` | 弹幕内容 | `string` | ✅ |
+| `value` | Barrage content | `string` | ✅ |
 
-> 内部会为每条弹幕自动补充 `width`、`x`、`y`、`speed`、`barrageFontCol` 等字段。
+> The engine auto-populates fields like `width`, `x`, `y`, `speed`, and `barrageFontCol` for each barrage.
 
-## 🧩 API 方法
+## 🧩 API Methods
 
 ### `drawBarrage()`
 
-启动弹幕绘制循环，建议在创建实例后调用。
+Starts the barrage rendering loop. Call this after creating an instance.
 
 ### `addBarrage(list)`
 
-追加弹幕数据，支持批量添加：
+Append barrages in batch:
 
 ```js
-barrage.addBarrage([{ value: '新弹幕' }])
+barrage.addBarrage([{ value: 'New barrage' }])
 ```
 
-> 若弹幕总数超过 `maxLimit`，将自动裁剪旧数据以保持性能稳定。
+> If the total barrage count exceeds `maxLimit`, older data is trimmed to keep performance stable.
 
-## 📌 小贴士
+## 📌 Tips
 
-- 若出现弹幕遮挡问题，请检查容器是否设置了 `position: relative` 与合理的 `height`。
-- `toVw` 开启后，弹幕位移会根据 `basePx` 自动换算，适合响应式场景。
-- 使用 `isRandomFontColor` 可以快速创建多彩弹幕效果。
+- If barrages overlap or clip, ensure the container uses `position: relative` and a proper `height`.
+- When `toVw` is enabled, movement is converted using `basePx`, making it suitable for responsive layouts.
+- Enable `isRandomFontColor` for colorful barrage effects.
 
 ---
 
-如果你喜欢这个项目，欢迎点个 Star ⭐️ 或提交 Issue 交流建议！
+If you like this project, feel free to star ⭐️ or open an issue!

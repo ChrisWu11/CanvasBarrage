@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -123,7 +123,7 @@
       <header>
         <h1>CanvasBarrage Demo</h1>
         <p>
-          超高性能 Canvas 弹幕库的效果，支持调节参数、添加弹幕
+          Experience a high-performance Canvas barrage with adjustable settings and live updates.
         </p>
       </header>
 
@@ -134,38 +134,38 @@
 
       <div class="panel">
         <div class="panel__row">
-          <button id="add">添加弹幕</button>
-          <button id="add-random" class="secondary">批量随机弹幕</button>
-          <span>已渲染：<strong id="count">0</strong> 条</span>
-          <span class="pill" id="status">已启动</span>
+          <button id="add">Add Barrage</button>
+          <button id="add-random" class="secondary">Add Random Batch</button>
+          <span>Rendered: <strong id="count">0</strong></span>
+          <span class="pill" id="status">Running</span>
         </div>
 
         <div class="panel__row">
           <label>
-            单条弹幕内容
-            <input id="message" type="text" value="这是一条新弹幕" />
+            Single barrage text
+            <input id="message" type="text" value="This is a new barrage" />
           </label>
           <label>
-            行数
+            Rows
             <input id="rows" type="number" min="1" max="10" value="6" />
           </label>
           <label>
-            速度
+            Speed
             <input id="speed" type="range" min="0.5" max="3" step="0.1" value="1.2" />
           </label>
           <label>
-            字体大小
+            Font size
             <input id="font-size" type="range" min="14" max="32" step="1" value="22" />
           </label>
           <label>
-            随机颜色
+            Random colors
             <input id="random-color" type="checkbox" checked />
           </label>
           <label>
-            字体颜色
+            Font color
             <input id="font-color" type="color" value="#ffffff" />
           </label>
-          <button id="apply" class="secondary">应用设置</button>
+          <button id="apply" class="secondary">Apply Settings</button>
         </div>
       </div>
     </div>
@@ -174,23 +174,23 @@
       import CanvasBarrage from "./index.js";
 
       const baseMessages = [
-        "CanvasBarrage 带来流畅的弹幕体验",
-        "GitHub Pages Demo",
-        "支持随机颜色",
-        "超高性能渲染",
-        "轻松集成到任意框架",
-        "保持弹幕间距",
-        "点击按钮可追加弹幕"
+        "CanvasBarrage delivers smooth barrage playback",
+        "GitHub Pages demo",
+        "Random colors supported",
+        "Ultra-high performance rendering",
+        "Easy to integrate with any framework",
+        "Keeps consistent barrage spacing",
+        "Click buttons to add more barrages"
       ];
 
-      const makeList = (count, prefix = "新弹幕") =>
+      const makeList = (count, prefix = "New barrage") =>
         Array.from({ length: count }, (_, index) => ({
           value: `${prefix} #${index + 1}`
         }));
 
       const seedList = [
         ...baseMessages.map(value => ({ value })),
-        ...makeList(30, "欢迎来到 CanvasBarrage")
+        ...makeList(30, "Welcome to CanvasBarrage")
       ];
 
       const stage = document.getElementById("stage");
@@ -224,21 +224,21 @@
         });
 
         barrage.drawBarrage();
-        statusEl.textContent = "已启动";
+        statusEl.textContent = "Running";
       };
 
       initBarrage({ list: seedList });
       countEl.textContent = totalCount;
 
       addBtn.addEventListener("click", () => {
-        const value = messageInput.value.trim() || "新的弹幕";
+        const value = messageInput.value.trim() || "New barrage";
         barrage.addBarrage([{ value }]);
         totalCount += 1;
         countEl.textContent = totalCount;
       });
 
       addRandomBtn.addEventListener("click", () => {
-        const nextBatch = makeList(10, "批量弹幕");
+        const nextBatch = makeList(10, "Batch barrage");
         barrage.addBarrage(nextBatch);
         totalCount += nextBatch.length;
         countEl.textContent = totalCount;
