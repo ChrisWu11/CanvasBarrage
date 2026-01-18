@@ -1,4 +1,4 @@
-# CanvasBarrage High-Performance Canvas Barrage Engine
+# High-Performance Canvas Barrage Engine
 
 > Handle massive barrage data smoothly with rich customization and multi-framework integration.
 
